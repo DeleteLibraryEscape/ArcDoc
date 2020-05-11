@@ -356,7 +356,7 @@
         ]
       }
     },
-    "/": {
+    "/api/Book": {
       "get": {
         "tags": [
           "Book"
@@ -453,18 +453,31 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MarketsIPaginatedListResult"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MarketsIPaginatedListResult"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MarketsIPaginatedListResult"
                 }
@@ -530,7 +543,30 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -540,7 +576,7 @@
         ]
       }
     },
-    "/{key}": {
+    "/api/Book/{key}": {
       "get": {
         "tags": [
           "Book"
@@ -580,18 +616,31 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Markets"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Markets"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Markets"
                 }
@@ -668,7 +717,30 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -715,7 +787,30 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -887,11 +982,11 @@
           {
             "name": "key",
             "in": "path",
-            "description": "",
+            "description": "key",
             "required": true,
             "schema": {
               "type": "string",
-              "description": "",
+              "description": "key",
               "nullable": true
             }
           },
@@ -3923,12 +4018,9 @@
           {
             "name": "key",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -4651,12 +4743,9 @@
           {
             "name": "key",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -5811,6 +5900,11 @@
       "ChargeModel": {
         "type": "object",
         "properties": {
+          "chargeId": {
+            "type": "string",
+            "description": "Id",
+            "nullable": true
+          },
           "counterpart": {
             "type": "string",
             "description": "客户名称",
