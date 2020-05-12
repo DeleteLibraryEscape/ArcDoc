@@ -356,6 +356,77 @@
         ]
       }
     },
+    "/api/ArcVatNumbers/Data": {
+      "get": {
+        "tags": [
+          "ArcVatNumbers"
+        ],
+        "summary": "数据",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArcVatNumbers"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Book": {
       "get": {
         "tags": [
@@ -384,50 +455,81 @@
             }
           },
           {
-            "name": "KeyEquals",
+            "name": "OrderBy",
             "in": "query",
+            "description": "按某字段排序",
             "schema": {
               "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
               "nullable": true
             }
           },
           {
             "name": "KeyContains",
             "in": "query",
+            "description": "主键包含",
             "schema": {
               "type": "string",
+              "description": "主键包含",
               "nullable": true
             }
           },
           {
             "name": "EntityEquals",
             "in": "query",
+            "description": "arc实体等于",
             "schema": {
               "type": "string",
+              "description": "arc实体等于",
               "nullable": true
             }
           },
           {
             "name": "MetalEquals",
             "in": "query",
+            "description": "品类等于",
             "schema": {
               "type": "string",
+              "description": "品类等于",
               "nullable": true
             }
           },
           {
             "name": "ActiveEquals",
             "in": "query",
+            "description": "启用状态等于",
             "schema": {
               "type": "string",
+              "description": "启用状态等于",
               "nullable": true
             }
           },
           {
             "name": "StrategyTypeEquals",
             "in": "query",
+            "description": "策略类型等于",
             "schema": {
               "type": "string",
+              "description": "策略类型等于",
               "nullable": true
             }
           },
@@ -820,6 +922,77 @@
         ]
       }
     },
+    "/api/Book/SelectOptions": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "组合的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Charges": {
       "get": {
         "tags": [
@@ -982,12 +1155,9 @@
           {
             "name": "key",
             "in": "path",
-            "description": "key",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "key",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -1069,6 +1239,542 @@
         ]
       }
     },
+    "/api/Commodities": {
+      "get": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "查询物料列表",
+        "parameters": [
+          {
+            "name": "Pagination.CurrentPage",
+            "in": "query",
+            "description": "缺省为第一页",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为第一页",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Pagination.PageSize",
+            "in": "query",
+            "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "description": "按某字段排序",
+            "schema": {
+              "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "MetalEquals",
+            "in": "query",
+            "description": "品类等于",
+            "schema": {
+              "type": "string",
+              "description": "品类等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommoditiesIPaginatedListResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "新建物料",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Commodities/{key}": {
+      "get": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "按物料名 查询物料",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Commodities"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "修改物料",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Commodities"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "删除物料",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Commodities/SelectOptions": {
+      "get": {
+        "tags": [
+          "Commodities"
+        ],
+        "summary": "物料的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Comptes": {
       "get": {
         "tags": [
@@ -1097,18 +1803,71 @@
             }
           },
           {
-            "name": "LoginEquals",
+            "name": "OrderBy",
             "in": "query",
+            "description": "按某字段排序",
             "schema": {
               "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "NomEquals",
+            "in": "query",
+            "description": "姓名等于",
+            "schema": {
+              "type": "string",
+              "description": "姓名等于",
               "nullable": true
             }
           },
           {
             "name": "NomContains",
             "in": "query",
+            "description": "姓名包含",
             "schema": {
               "type": "string",
+              "description": "姓名包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "EnvironementEquals",
+            "in": "query",
+            "description": "角色等于",
+            "schema": {
+              "type": "string",
+              "description": "角色等于",
               "nullable": true
             }
           },
@@ -1583,6 +2342,77 @@
         ]
       }
     },
+    "/api/Comptes/SelectOptions": {
+      "get": {
+        "tags": [
+          "Comptes"
+        ],
+        "summary": "用户的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/ContractNumbers": {
       "get": {
         "tags": [
@@ -1775,12 +2605,9 @@
           {
             "name": "key",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -1850,6 +2677,1707 @@
                 "allowEmptyValue": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Counterparts": {
+      "get": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "查询公司列表",
+        "parameters": [
+          {
+            "name": "Pagination.CurrentPage",
+            "in": "query",
+            "description": "缺省为第一页",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为第一页",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Pagination.PageSize",
+            "in": "query",
+            "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "description": "按某字段排序",
+            "schema": {
+              "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "LegalNameEquals",
+            "in": "query",
+            "description": "法定名称等于",
+            "schema": {
+              "type": "string",
+              "description": "法定名称等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "LegalNameContains",
+            "in": "query",
+            "description": "法定名称包含",
+            "schema": {
+              "type": "string",
+              "description": "法定名称包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "AddressContains",
+            "in": "query",
+            "description": "地址包含",
+            "schema": {
+              "type": "string",
+              "description": "地址包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CountryEquals",
+            "in": "query",
+            "description": "国家地区等于",
+            "schema": {
+              "type": "string",
+              "description": "国家地区等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "Type1Equals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "EntityEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BankDetailsContains",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "AccountCodeEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "SageNb",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "description": "",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CurEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BrokerCodeEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CompanyGroupEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CreditLineLowerBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "number",
+              "description": "",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CreditLineUpperBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "number",
+              "description": "",
+              "format": "double",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CreditLineCurrencyEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CreditLineExpiryLowerBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CreditLineExpiryUpperBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "IntermediaryEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "BankTier",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "description": "",
+              "format": "int32",
+              "nullable": true
+            }
+          },
+          {
+            "name": "CheckedEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "IssuingBankEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "AdvisingBankEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "RecourseEquals",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KycDateLowerBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KycDateUpperBound",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string",
+              "description": "",
+              "format": "date-time",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CounterpartsIPaginatedListResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "新建公司",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Counterparts/{key}": {
+      "get": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "按公司名 查询公司",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Counterparts"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "修改公司",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Counterparts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "删除公司",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Counterparts/SelectOptions": {
+      "get": {
+        "tags": [
+          "Counterparts"
+        ],
+        "summary": "公司的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/CounterpartsVat/CounterpartVatNumber": {
+      "get": {
+        "tags": [
+          "CounterpartsVat"
+        ],
+        "summary": "Customer's VAT number",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Currency": {
+      "get": {
+        "tags": [
+          "Currency"
+        ],
+        "summary": "获取币种列表",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrenciesIPaginatedListResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Currency"
+        ],
+        "summary": "新建币种",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Currency/{key}": {
+      "put": {
+        "tags": [
+          "Currency"
+        ],
+        "summary": "修改币种",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "Currency",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Currency",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Currencies"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Currency/GetCurrencies": {
+      "get": {
+        "tags": [
+          "Currency"
+        ],
+        "summary": "获取所有币种",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Entities": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "查询实体列表",
+        "parameters": [
+          {
+            "name": "Pagination.CurrentPage",
+            "in": "query",
+            "description": "缺省为第一页",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为第一页",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Pagination.PageSize",
+            "in": "query",
+            "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "description": "按某字段排序",
+            "schema": {
+              "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntitiesIPaginatedListResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "新建实体",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Entities/{key}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "按实体名 查询实体",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entities"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "修改实体",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Entities"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "删除实体",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Entities/SelectOptions": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "实体的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -2010,6 +4538,219 @@
           "Enum"
         ],
         "summary": "审批状态",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Enum/InvoiceStatus": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "发票状态",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Enum/InvoiceDocTypes": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "发票文档类型",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Enum/ChargeType": {
+      "get": {
+        "tags": [
+          "Enum"
+        ],
+        "summary": "ChargeType",
         "parameters": [
           {
             "name": "ctz",
@@ -2609,12 +5350,83 @@
         ]
       }
     },
+    "/api/InvoiceAlloctions/InvoicesAllocationData": {
+      "get": {
+        "tags": [
+          "InvoiceAlloctions"
+        ],
+        "summary": "获取数据",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InvoicesAllocationDataModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Invoices": {
       "get": {
         "tags": [
           "Invoices"
         ],
-        "summary": "获取发票列表",
+        "summary": "获取销售发票列表",
         "parameters": [
           {
             "name": "Pagination.CurrentPage",
@@ -2637,7 +5449,7 @@
             }
           },
           {
-            "name": "Contract",
+            "name": "ContractEquals",
             "in": "query",
             "description": "合同号",
             "schema": {
@@ -2647,7 +5459,7 @@
             }
           },
           {
-            "name": "Counterpart",
+            "name": "CounterpartEquals",
             "in": "query",
             "description": "客户名称",
             "schema": {
@@ -2657,7 +5469,7 @@
             }
           },
           {
-            "name": "Status",
+            "name": "StatusEquals",
             "in": "query",
             "description": "状态",
             "schema": {
@@ -2667,7 +5479,7 @@
             }
           },
           {
-            "name": "InvoiceNumber",
+            "name": "InvoiceNumberContains",
             "in": "query",
             "description": "发票号",
             "schema": {
@@ -2677,7 +5489,7 @@
             }
           },
           {
-            "name": "Currency",
+            "name": "CurrencyEquals",
             "in": "query",
             "description": "币种",
             "schema": {
@@ -2687,7 +5499,7 @@
             }
           },
           {
-            "name": "PayTerms",
+            "name": "PayTermsEquals",
             "in": "query",
             "description": "付款方式",
             "schema": {
@@ -2697,7 +5509,7 @@
             }
           },
           {
-            "name": "InvoiceDate",
+            "name": "InvoiceDateEquals",
             "in": "query",
             "description": "发票日期",
             "schema": {
@@ -2708,7 +5520,7 @@
             }
           },
           {
-            "name": "DueDate",
+            "name": "DueDateEquals",
             "in": "query",
             "description": "截止日期",
             "schema": {
@@ -2719,7 +5531,7 @@
             }
           },
           {
-            "name": "LastPaymentDate",
+            "name": "LastPaymentDateEquals",
             "in": "query",
             "description": "最近付款时间",
             "schema": {
@@ -2730,7 +5542,7 @@
             }
           },
           {
-            "name": "Overdues",
+            "name": "OverduesEquals",
             "in": "query",
             "description": "是否过期",
             "schema": {
@@ -2787,7 +5599,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvoiceModelIPaginatedListResult"
+                  "$ref": "#/components/schemas/InvoiceListModelIPaginatedListResult"
                 }
               }
             }
@@ -2803,7 +5615,91 @@
         "tags": [
           "Invoices"
         ],
-        "summary": "新建发票",
+        "summary": "新建销售发票",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "修改销售发票",
         "parameters": [
           {
             "name": "ctz",
@@ -2889,7 +5785,7 @@
         "tags": [
           "Invoices"
         ],
-        "summary": "按发票号查询发票",
+        "summary": "按发票号查询销售发票",
         "parameters": [
           {
             "name": "key",
@@ -2962,11 +5858,11 @@
           }
         ]
       },
-      "put": {
+      "delete": {
         "tags": [
           "Invoices"
         ],
-        "summary": "修改发票",
+        "summary": "删除销售发票",
         "parameters": [
           {
             "name": "key",
@@ -2998,31 +5894,6 @@
             }
           }
         ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/InvoiceAddOrEditModel"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -3056,22 +5927,104 @@
             "bearer": [ ]
           }
         ]
-      },
-      "delete": {
+      }
+    },
+    "/api/Invoices/AdjustedInvoices": {
+      "get": {
         "tags": [
           "Invoices"
         ],
-        "summary": "删除发票",
+        "summary": "获取临时发票列表",
         "parameters": [
           {
-            "name": "key",
-            "in": "path",
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InvoiceModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Invoices/GetNumberByContractLot": {
+      "get": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Interests calculated on invoice",
+        "parameters": [
+          {
+            "name": "contract",
+            "in": "query",
             "description": "",
-            "required": true,
             "schema": {
               "type": "string",
               "description": "",
               "nullable": true
+            }
+          },
+          {
+            "name": "lot",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "description": "",
+              "format": "int32"
             }
           },
           {
@@ -3116,6 +6069,16 @@
                 "allowEmptyValue": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -3222,6 +6185,745 @@
                 "allowEmptyValue": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Lots/GetLots": {
+      "get": {
+        "tags": [
+          "Lots"
+        ],
+        "summary": "获取ContractLot列表",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContractLotModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/MaterialAllocationsDetails/GetPurInvoiceAllocDataModelByContractLot": {
+      "get": {
+        "tags": [
+          "MaterialAllocationsDetails"
+        ],
+        "summary": "获取allocations",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurInvoiceAllocDataModel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Metals": {
+      "get": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "查询金属品类列表",
+        "parameters": [
+          {
+            "name": "Pagination.CurrentPage",
+            "in": "query",
+            "description": "缺省为第一页",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为第一页",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Pagination.PageSize",
+            "in": "query",
+            "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+            "schema": {
+              "type": "integer",
+              "description": "缺省为15。若设置为小于等于0的值，则不分页。",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "description": "按某字段排序",
+            "schema": {
+              "type": "string",
+              "description": "按某字段排序",
+              "nullable": true
+            }
+          },
+          {
+            "name": "OrderByDesc",
+            "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
+            "schema": {
+              "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetalsIPaginatedListResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "新建金属品类",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Metals/{key}": {
+      "get": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "按金属品类名 查询金属品类",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Metals"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "修改金属品类",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Metals"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "删除金属品类",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "",
+              "nullable": true
+            }
+          },
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Metals/SelectOptions": {
+      "get": {
+        "tags": [
+          "Metals"
+        ],
+        "summary": "金属品类的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/PaymentTerms/Data": {
+      "get": {
+        "tags": [
+          "PaymentTerms"
+        ],
+        "summary": "获取数据",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Model_PaymentTerms"
+                  }
                 }
               }
             }
@@ -3614,12 +7316,9 @@
           {
             "name": "key",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
-              "type": "string",
-              "description": "",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -3856,6 +7555,99 @@
         ]
       }
     },
+    "/api/PhysicalContracts/GenerateContract": {
+      "post": {
+        "tags": [
+          "PhysicalContracts"
+        ],
+        "summary": "生成合同号",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateContractInput"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateContractInput"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateContractInput"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateContractInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Pricings": {
       "get": {
         "tags": [
@@ -4006,23 +7798,13 @@
             "bearer": [ ]
           }
         ]
-      }
-    },
-    "/api/Pricings/{key}": {
+      },
       "put": {
         "tags": [
           "Pricings"
         ],
         "summary": "修改点价",
         "parameters": [
-          {
-            "name": "key",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "ctz",
             "in": "header",
@@ -4107,10 +7889,10 @@
         "tags": [
           "PurchInvoices"
         ],
-        "summary": "获取PurchInvoices列表",
+        "summary": "获取采购发票列表",
         "parameters": [
           {
-            "name": "Contract",
+            "name": "ContractEquals",
             "in": "query",
             "description": "合同号",
             "schema": {
@@ -4120,7 +7902,7 @@
             }
           },
           {
-            "name": "Counterpart",
+            "name": "CounterpartEquals",
             "in": "query",
             "description": "客户名称",
             "schema": {
@@ -4130,7 +7912,7 @@
             }
           },
           {
-            "name": "Status",
+            "name": "StatusEquals",
             "in": "query",
             "description": "状态",
             "schema": {
@@ -4140,7 +7922,7 @@
             }
           },
           {
-            "name": "InvoiceNumber",
+            "name": "InvoiceNumberContains",
             "in": "query",
             "description": "发票号",
             "schema": {
@@ -4150,7 +7932,7 @@
             }
           },
           {
-            "name": "InvoiceDate",
+            "name": "InvoiceDateEquals",
             "in": "query",
             "description": "发票日期",
             "schema": {
@@ -4161,7 +7943,7 @@
             }
           },
           {
-            "name": "LastPaymentDate",
+            "name": "LastPaymentDateEquals",
             "in": "query",
             "description": "付款时间",
             "schema": {
@@ -4172,7 +7954,7 @@
             }
           },
           {
-            "name": "DueDate",
+            "name": "DueDateEquals",
             "in": "query",
             "description": "截至日期",
             "schema": {
@@ -4183,7 +7965,7 @@
             }
           },
           {
-            "name": "Currency",
+            "name": "CurrencyEquals",
             "in": "query",
             "description": "币种",
             "schema": {
@@ -4256,7 +8038,91 @@
         "tags": [
           "PurchInvoices"
         ],
-        "summary": "新建PurchInvoices",
+        "summary": "新建采购发票",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "PurchInvoices"
+        ],
+        "summary": "修改采购发票",
         "parameters": [
           {
             "name": "ctz",
@@ -4342,7 +8208,7 @@
         "tags": [
           "PurchInvoices"
         ],
-        "summary": "按发票号查询PurchInvoices",
+        "summary": "按发票号查询采购发票",
         "parameters": [
           {
             "name": "key",
@@ -4415,11 +8281,11 @@
           }
         ]
       },
-      "put": {
+      "delete": {
         "tags": [
           "PurchInvoices"
         ],
-        "summary": "修改PurchInvoices",
+        "summary": "删除采购发票",
         "parameters": [
           {
             "name": "key",
@@ -4451,31 +8317,6 @@
             }
           }
         ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PurchInvoicesAddOrEditModel"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",
@@ -4509,22 +8350,33 @@
             "bearer": [ ]
           }
         ]
-      },
-      "delete": {
+      }
+    },
+    "/api/PurchInvoices/GetNumberByContractLot": {
+      "get": {
         "tags": [
           "PurchInvoices"
         ],
-        "summary": "删除PurchInvoices",
+        "summary": "ProvisionnalInvoice",
         "parameters": [
           {
-            "name": "key",
-            "in": "path",
+            "name": "contract",
+            "in": "query",
             "description": "",
-            "required": true,
             "schema": {
               "type": "string",
               "description": "",
               "nullable": true
+            }
+          },
+          {
+            "name": "lot",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "description": "",
+              "format": "int32"
             }
           },
           {
@@ -4569,6 +8421,16 @@
                 "allowEmptyValue": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -4731,23 +8593,13 @@
             "bearer": [ ]
           }
         ]
-      }
-    },
-    "/api/QpExtensions/{key}": {
+      },
       "put": {
         "tags": [
           "QpExtensions"
         ],
         "summary": "修改延期点价",
         "parameters": [
-          {
-            "name": "key",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "ctz",
             "in": "header",
@@ -4855,18 +8707,41 @@
             }
           },
           {
-            "name": "RoleCodeEquals",
+            "name": "OrderBy",
             "in": "query",
+            "description": "按某字段排序",
             "schema": {
               "type": "string",
+              "description": "按某字段排序",
               "nullable": true
             }
           },
           {
-            "name": "RoleCodeContains",
+            "name": "OrderByDesc",
             "in": "query",
+            "description": "是否降序排序",
+            "schema": {
+              "type": "boolean",
+              "description": "是否降序排序"
+            }
+          },
+          {
+            "name": "KeyEquals",
+            "in": "query",
+            "description": "主键等于",
             "schema": {
               "type": "string",
+              "description": "主键等于",
+              "nullable": true
+            }
+          },
+          {
+            "name": "KeyContains",
+            "in": "query",
+            "description": "主键包含",
+            "schema": {
+              "type": "string",
+              "description": "主键包含",
               "nullable": true
             }
           },
@@ -5247,6 +9122,148 @@
                 "allowEmptyValue": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Role/SelectOptions": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "角色的下拉框选项",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/VatCodes/Data": {
+      "get": {
+        "tags": [
+          "VatCodes"
+        ],
+        "summary": "获取数据",
+        "parameters": [
+          {
+            "name": "ctz",
+            "in": "header",
+            "description": "client time zone IANA name. javascript code to get client time zone: `Intl.DateTimeFormat().resolvedOptions().timeZone`. Example: \"Asia/Shanghai\"",
+            "schema": {
+              "type": "string",
+              "example": "Asia/Shanghai"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "header",
+            "description": "locale culture. Example: \"en\", \"zh\"",
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "newtoken": {
+                "description": "new token",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "locale": {
+                "description": "locale culture. Example: \"en\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "stz": {
+                "description": "server time zone IANA name. Example: \"Asia/Shanghai\"",
+                "allowEmptyValue": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VatCodes"
+                  }
                 }
               }
             }
@@ -5820,6 +9837,23 @@
         },
         "additionalProperties": false
       },
+      "ArcVatNumbers": {
+        "type": "object",
+        "properties": {
+          "vatNumber": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ARC_VAT_NUMBERS].[VAT_NUMBER]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: VAT_NUMBER",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ARC_VAT_NUMBERS].[COMMENT]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: COMMENT",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [ARC_VAT_NUMBERS]\r\n<para></para>\r\n含义: ARC_VAT_NUMBERS--arc的增值税号"
+      },
       "IPaginationResult": {
         "type": "object",
         "properties": {
@@ -5851,34 +9885,42 @@
         "properties": {
           "market": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[Market]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Market",
             "nullable": true
           },
           "comments": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[Comments]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Comments",
             "nullable": true
           },
           "entity": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[entity]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: entity 关联entities",
             "nullable": true
           },
           "metal": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[Metal]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Metal 关联metals",
             "nullable": true
           },
           "entityCode": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[entity_code]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(5)\r\n\r\n含义: rat中: 这是entity的short_code_for_book的冗余",
             "nullable": true
           },
           "active": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[active]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: active",
             "nullable": true
           },
           "strategyType": {
             "type": "string",
+            "description": "Relational:ColumnName: [MARKETS].[strategy_type]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: rat新增: 策略类型",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Relational:TableName: [MARKETS]\r\n<para></para>\r\n含义: MARKETS--业务组合(book/market/portfolio) 类似策略加核算主体"
       },
       "MarketsIPaginatedListResult": {
         "type": "object",
@@ -6122,27 +10164,93 @@
         },
         "additionalProperties": false
       },
+      "Commodities": {
+        "type": "object",
+        "properties": {
+          "commodity": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COMMODITIES].[commodity]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: commodity",
+            "nullable": true
+          },
+          "premium": {
+            "type": "number",
+            "description": "Relational:ColumnName: [COMMODITIES].[premium]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: premium",
+            "format": "double",
+            "nullable": true
+          },
+          "market": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COMMODITIES].[market]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: market (废弃)",
+            "nullable": true
+          },
+          "metal": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COMMODITIES].[metal]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: metal 关联metals",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COMMODITIES].[description]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: description",
+            "nullable": true
+          },
+          "premium2": {
+            "type": "number",
+            "description": "Relational:ColumnName: [COMMODITIES].[premium2]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: premium2",
+            "format": "double",
+            "nullable": true
+          },
+          "pricing": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COMMODITIES].[pricing]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: pricing",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [COMMODITIES]\r\n<para></para>\r\n含义: COMMODITIES--品种物料"
+      },
+      "CommoditiesIPaginatedListResult": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/IPaginationResult"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Commodities"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Comptes": {
         "type": "object",
         "properties": {
           "login": {
             "type": "string",
+            "description": "Relational:ColumnName: [Comptes].[Login]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 用户名, 主键",
             "nullable": true
           },
           "nom": {
             "type": "string",
+            "description": "Relational:ColumnName: [Comptes].[Nom]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Nom 名",
             "nullable": true
           },
           "mdp": {
             "type": "string",
+            "description": "Relational:ColumnName: [Comptes].[mdp]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: mdp",
             "nullable": true
           },
           "environement": {
             "type": "string",
+            "description": "Relational:ColumnName: [Comptes].[environement]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 角色",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Relational:TableName: [Comptes]\r\n<para></para>\r\n含义: Comptes--用户账户"
       },
       "ComptesIPaginatedListResult": {
         "type": "object",
@@ -6263,6 +10371,233 @@
         },
         "additionalProperties": false
       },
+      "Counterparts": {
+        "type": "object",
+        "properties": {
+          "counterpart": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Counterpart]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Counterpart",
+            "nullable": true
+          },
+          "legalName": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Legal_name]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(100)\r\n\r\n含义: Legal_name",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Address]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: Address",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Country]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Country",
+            "nullable": true
+          },
+          "type1": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Type1]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: Type1",
+            "nullable": true
+          },
+          "entity": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Entity]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: Entity",
+            "nullable": true
+          },
+          "bankDetails": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Bank_details]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: Bank_details",
+            "nullable": true
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Account_code]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Account_code",
+            "nullable": true
+          },
+          "sageNb": {
+            "type": "integer",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[SAGE_nb]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: SAGE_nb",
+            "format": "int32"
+          },
+          "cur": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[cur]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(5)\r\n\r\n含义: cur",
+            "nullable": true
+          },
+          "brokerCode": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[broker_code]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: broker_code",
+            "nullable": true
+          },
+          "companyGroup": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[Company_group]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Company_group",
+            "nullable": true
+          },
+          "creditLine": {
+            "type": "number",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[credit_line]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: credit_line",
+            "format": "double",
+            "nullable": true
+          },
+          "creditLineCurrency": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[credit_line_currency]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(5)\r\n\r\n含义: credit_line_currency",
+            "nullable": true
+          },
+          "creditLineExpiry": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[credit_line_expiry]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: credit_line_expiry",
+            "format": "date-time",
+            "nullable": true
+          },
+          "intermediary": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[intermediary]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: intermediary",
+            "nullable": true
+          },
+          "bankTier": {
+            "type": "integer",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[bank_tier]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: bank_tier",
+            "format": "int32",
+            "nullable": true
+          },
+          "checked": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[checked]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: checked",
+            "nullable": true
+          },
+          "issuingBank": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[issuing_bank]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: issuing_bank",
+            "nullable": true
+          },
+          "advisingBank": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[advising_bank]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: advising_bank",
+            "nullable": true
+          },
+          "recourse": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[recourse]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(20)\r\n\r\n含义: recourse",
+            "nullable": true
+          },
+          "kycDate": {
+            "type": "string",
+            "description": "Relational:ColumnName: [COUNTERPARTS].[KYC_date]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: KYC_date",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [COUNTERPARTS]\r\n<para></para>\r\n含义: COUNTERPARTS--(对方)公司"
+      },
+      "CounterpartsIPaginatedListResult": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/IPaginationResult"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Counterparts"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Currencies": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "Relational:ColumnName: [CURRENCIES].[currency]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(3)\r\n\r\n含义: currency",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Relational:ColumnName: [CURRENCIES].[description]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: description",
+            "nullable": true
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "Relational:ColumnName: [CURRENCIES].[account_code]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: account_code",
+            "nullable": true
+          },
+          "currentRate": {
+            "type": "number",
+            "description": "Relational:ColumnName: [CURRENCIES].[current_rate]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: current_rate",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [CURRENCIES]\r\n<para></para>\r\n含义: CURRENCIES--币种"
+      },
+      "CurrenciesIPaginatedListResult": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/IPaginationResult"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Currencies"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Entities": {
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ENTITIES].[ENTITY]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: ENTITY",
+            "nullable": true
+          },
+          "sageNumber": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ENTITIES].[SAGE_NUMBER]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: SAGE_NUMBER",
+            "nullable": true
+          },
+          "shortCodeForBook": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ENTITIES].[short_code_for_book]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: rat新增: book中的简称",
+            "nullable": true
+          },
+          "shortCodeForContract": {
+            "type": "string",
+            "description": "Relational:ColumnName: [ENTITIES].[short_code_for_contract]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(1)\r\n\r\n含义: rat新增: 合同中的简称",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [ENTITIES]\r\n<para></para>\r\n含义: ENTITIES--实体"
+      },
+      "EntitiesIPaginatedListResult": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/IPaginationResult"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Entities"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -6293,7 +10628,40 @@
           "additionalProperties": false
         }
       },
-      "InvoiceModel": {
+      "InvoicesAllocationDataModel": {
+        "type": "object",
+        "properties": {
+          "allocationNumber": {
+            "type": "string",
+            "description": "Allocation",
+            "nullable": true
+          },
+          "step": {
+            "type": "integer",
+            "description": "Ref",
+            "format": "int32"
+          },
+          "netWeight": {
+            "type": "number",
+            "description": "净重",
+            "format": "double",
+            "nullable": true
+          },
+          "docNumber": {
+            "type": "string",
+            "description": "文档编号",
+            "nullable": true
+          },
+          "clean": {
+            "type": "string",
+            "description": "Clean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "InvoicesAllocationDataModel"
+      },
+      "InvoiceListModel": {
         "type": "object",
         "properties": {
           "contract": {
@@ -6447,9 +10815,9 @@
           }
         },
         "additionalProperties": false,
-        "description": "发票"
+        "description": "发票列表"
       },
-      "InvoiceModelIPaginatedListResult": {
+      "InvoiceListModelIPaginatedListResult": {
         "type": "object",
         "properties": {
           "pagination": {
@@ -6458,7 +10826,7 @@
           "list": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InvoiceModel"
+              "$ref": "#/components/schemas/InvoiceListModel"
             },
             "nullable": true,
             "readOnly": true
@@ -6471,28 +10839,28 @@
         "properties": {
           "invoiceNumber": {
             "type": "string",
-            "description": "发票号",
+            "description": "Relational:ColumnName: [INVOICES_ALLOCS].[INVOICE_NUMBER]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 销售发票号",
             "nullable": true
           },
           "contract": {
             "type": "string",
-            "description": "采购合同号",
+            "description": "Relational:ColumnName: [INVOICES_ALLOCS].[CONTRACT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 采购合同号",
             "nullable": true
           },
           "lot": {
             "type": "integer",
-            "description": "采购合同Lot号",
+            "description": "Relational:ColumnName: [INVOICES_ALLOCS].[LOT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: 采购合同批次号",
             "format": "int32"
           },
           "quantity": {
             "type": "number",
-            "description": "采购合同的量",
+            "description": "Relational:ColumnName: [INVOICES_ALLOCS].[quantity]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: 关联的数量",
             "format": "double",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "发票Allocs"
+        "description": "Relational:TableName: [INVOICES_ALLOCS]\r\n<para></para>\r\n含义: INVOICES_ALLOCS--销售发票与货物源头的采购批次合同的关联"
       },
       "InvoicesAllocationModel": {
         "type": "object",
@@ -7165,37 +11533,455 @@
         "additionalProperties": false,
         "description": "发票查看model"
       },
-      "InvoicesDocs": {
+      "InvoiceModel": {
         "type": "object",
         "properties": {
+          "counterpart": {
+            "type": "string",
+            "description": "客户名称",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "description": "量",
+            "format": "double",
+            "nullable": true
+          },
+          "contract": {
+            "type": "string",
+            "description": "合同号",
+            "nullable": true
+          },
+          "lot": {
+            "type": "integer",
+            "description": "Lot号",
+            "format": "int32"
+          },
+          "invoiceDate": {
+            "type": "string",
+            "description": "发票日期",
+            "format": "date-time",
+            "nullable": true
+          },
           "invoiceNumber": {
             "type": "string",
             "description": "发票号",
             "nullable": true
           },
-          "docId": {
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "nullable": true
+          },
+          "adjusted": {
+            "type": "string",
+            "description": "临时发票号",
+            "nullable": true
+          },
+          "purchaseInvoiceNumber": {
+            "type": "string",
+            "description": "内部交易的采购发票号",
+            "nullable": true
+          },
+          "lcNumber": {
+            "type": "string",
+            "description": "信用证编号",
+            "nullable": true
+          },
+          "ipNumber": {
+            "type": "string",
+            "description": "保单编号",
+            "nullable": true
+          },
+          "commodity": {
+            "type": "string",
+            "description": "品种",
+            "nullable": true
+          },
+          "brand": {
+            "type": "string",
+            "description": "品牌",
+            "nullable": true
+          },
+          "origin": {
+            "type": "string",
+            "description": "原产地",
+            "nullable": true
+          },
+          "grossWeight": {
+            "type": "number",
+            "description": "毛重",
+            "format": "double",
+            "nullable": true
+          },
+          "bundlesNb": {
+            "type": "number",
+            "description": "捆数",
+            "format": "double",
+            "nullable": true
+          },
+          "packing": {
+            "type": "string",
+            "description": "包裹数",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "备注",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "description": "价格",
+            "format": "double",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "description": "币种",
+            "nullable": true
+          },
+          "interests": {
+            "type": "number",
+            "description": "利息费",
+            "format": "double",
+            "nullable": true
+          },
+          "charge": {
+            "type": "number",
+            "description": "其他费用",
+            "format": "double",
+            "nullable": true
+          },
+          "vat": {
+            "type": "number",
+            "description": "税费",
+            "format": "double",
+            "nullable": true
+          },
+          "vatCurrency": {
+            "type": "string",
+            "description": "Vat币种",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "金额",
+            "format": "double",
+            "nullable": true
+          },
+          "exchageRate": {
+            "type": "number",
+            "description": "汇率",
+            "format": "double",
+            "nullable": true
+          },
+          "arcVat": {
+            "type": "string",
+            "description": "VAT number",
+            "nullable": true
+          },
+          "counterpartVat": {
+            "type": "string",
+            "description": "Customer's VAT number",
+            "nullable": true
+          },
+          "vatCode": {
+            "type": "string",
+            "description": "VAT_CODE",
+            "nullable": true
+          },
+          "vatDescription": {
+            "type": "string",
+            "description": "VAT_CODE mentions",
+            "nullable": true
+          },
+          "libor": {
+            "type": "number",
+            "description": "Libor比率",
+            "format": "double",
+            "nullable": true
+          },
+          "liborDescription": {
+            "type": "string",
+            "description": "Libor description",
+            "nullable": true
+          },
+          "marginRate": {
+            "type": "number",
+            "description": "Margin比率",
+            "format": "double",
+            "nullable": true
+          },
+          "allInRate": {
+            "type": "number",
+            "description": "or all in rate",
+            "format": "double",
+            "nullable": true
+          },
+          "marginNbOfDays": {
             "type": "integer",
-            "description": "DocId",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "description": "标题",
+            "description": "Libor days",
+            "format": "int32",
             "nullable": true
           },
-          "mention": {
-            "type": "string",
-            "description": "内容",
+          "penaltyRate": {
+            "type": "number",
+            "description": "Penalty比率",
+            "format": "double",
             "nullable": true
           },
-          "title2": {
+          "penaltyNbOfDays": {
+            "type": "integer",
+            "description": "Penalty days",
+            "format": "int32",
+            "nullable": true
+          },
+          "expPayDate": {
             "type": "string",
-            "description": "标题2",
+            "description": "预计付款日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "description": "截至日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deliveryDate": {
+            "type": "string",
+            "description": "交付日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "accounted": {
+            "type": "string",
+            "description": "是否已作帐",
+            "nullable": true
+          },
+          "payed": {
+            "type": "string",
+            "description": "是否付款",
+            "nullable": true
+          },
+          "payedAmount": {
+            "type": "number",
+            "description": "已付款金额",
+            "format": "double",
+            "nullable": true
+          },
+          "lastPaymentDate": {
+            "type": "string",
+            "description": "最近付款日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "description": "最近更新日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deliveryTerms": {
+            "type": "string",
+            "description": "Delivery terms",
+            "nullable": true
+          },
+          "docType": {
+            "type": "string",
+            "description": "文档类型",
+            "nullable": true
+          },
+          "docNumber": {
+            "type": "string",
+            "description": "发票下的附件文档编号",
+            "nullable": true
+          },
+          "docDate": {
+            "type": "string",
+            "description": "文档日期",
+            "format": "date-time",
+            "nullable": true
+          },
+          "insuranceCert": {
+            "type": "string",
+            "description": "Insurance certificate",
+            "nullable": true
+          },
+          "payTerms": {
+            "type": "string",
+            "description": "付款方式",
+            "nullable": true
+          },
+          "payTermsMention": {
+            "type": "string",
+            "description": "付款方式说明",
+            "nullable": true
+          },
+          "paymentTermsCode": {
+            "type": "string",
+            "description": "ARC's receiving account",
+            "nullable": true
+          },
+          "paymentTerms": {
+            "type": "string",
+            "description": "ARC's receiving account descriptions",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "InvoicesDocs"
+        "description": "发票"
+      },
+      "InvoicesDocs": {
+        "type": "object",
+        "properties": {
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Relational:ColumnName: [INVOICES_DOCS].[INVOICE_NUMBER]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 发票号",
+            "nullable": true
+          },
+          "docId": {
+            "type": "integer",
+            "description": "Relational:ColumnName: [INVOICES_DOCS].[DOC_ID]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: 发票单据号",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "description": "Relational:ColumnName: [INVOICES_DOCS].[TITLE]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(100)\r\n\r\n含义: 标题",
+            "nullable": true
+          },
+          "mention": {
+            "type": "string",
+            "description": "Relational:ColumnName: [INVOICES_DOCS].[MENTION]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: 记载",
+            "nullable": true
+          },
+          "title2": {
+            "type": "string",
+            "description": "Relational:ColumnName: [INVOICES_DOCS].[TITLE2]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(100)\r\n\r\n含义: 标题2",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [INVOICES_DOCS]\r\n<para></para>\r\n含义: INVOICES_DOCS--发票的单据信息"
+      },
+      "ContractLotModel": {
+        "type": "object",
+        "properties": {
+          "contract": {
+            "type": "string",
+            "description": "合同号",
+            "nullable": true
+          },
+          "lot": {
+            "type": "integer",
+            "description": "lot号",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "合同lot号"
+      },
+      "PurInvoiceAllocDataModel": {
+        "type": "object",
+        "properties": {
+          "allocationNumber": {
+            "type": "string",
+            "description": "Allocation",
+            "nullable": true
+          },
+          "step": {
+            "type": "integer",
+            "description": "Ref",
+            "format": "int32"
+          },
+          "netWeight": {
+            "type": "number",
+            "description": "净重",
+            "format": "double",
+            "nullable": true
+          },
+          "docNumber": {
+            "type": "string",
+            "description": "文档编号",
+            "nullable": true
+          },
+          "clean": {
+            "type": "string",
+            "description": "Clean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "PurchaseInvoiceAlloctionData"
+      },
+      "Metals": {
+        "type": "object",
+        "properties": {
+          "metal": {
+            "type": "string",
+            "description": "Relational:ColumnName: [METALS].[Metal]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Metal",
+            "nullable": true
+          },
+          "marketPrice": {
+            "type": "number",
+            "description": "Relational:ColumnName: [METALS].[market_price]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: market_price 市场价",
+            "format": "double",
+            "nullable": true
+          },
+          "lotQty": {
+            "type": "number",
+            "description": "Relational:ColumnName: [METALS].[lot_qty]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: lot_qty 期货合约的单位交易量",
+            "format": "double",
+            "nullable": true
+          },
+          "shortCodeForBook": {
+            "type": "string",
+            "description": "Relational:ColumnName: [METALS].[short_code_for_book]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: rat新增: book中的简称",
+            "nullable": true
+          },
+          "shortCodeForContract": {
+            "type": "string",
+            "description": "Relational:ColumnName: [METALS].[short_code_for_contract]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(2)\r\n\r\n含义: rat新增: 合同中的简称",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [METALS]\r\n<para></para>\r\n含义: METALS--金属品类 兼LME标准合约"
+      },
+      "MetalsIPaginatedListResult": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/IPaginationResult"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metals"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Model_PaymentTerms": {
+        "type": "object",
+        "properties": {
+          "paymentTermsCode": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PAYMENT_TERMS].[Payment_terms_code]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: Payment_terms_code",
+            "nullable": true
+          },
+          "paymentTerms": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PAYMENT_TERMS].[Payment_terms]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: Payment_terms",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [PAYMENT_TERMS]\r\n<para></para>\r\n含义: PAYMENT_TERMS--款条款"
       },
       "PhysicalContractModel": {
         "type": "object",
@@ -7397,32 +12183,32 @@
         "properties": {
           "contract": {
             "type": "string",
-            "description": "合同",
+            "description": "Relational:ColumnName: [LOTS_ALLOCATIONS].[CONTRACT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 合同号",
             "nullable": true
           },
           "lot": {
             "type": "integer",
-            "description": "Lot号",
+            "description": "Relational:ColumnName: [LOTS_ALLOCATIONS].[LOT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: 合同批次号",
             "format": "int32"
           },
           "allocationNumber": {
             "type": "string",
-            "description": "AllocationNumber",
+            "description": "Relational:ColumnName: [LOTS_ALLOCATIONS].[ALLOCATION_NUMBER]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 收发货 分配号",
             "nullable": true
           },
           "quantity": {
             "type": "number",
-            "description": "货物的量",
+            "description": "Relational:ColumnName: [LOTS_ALLOCATIONS].[quantity]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: 关联数量",
             "format": "double"
           },
           "step": {
             "type": "string",
-            "description": "Step",
+            "description": "Relational:ColumnName: [LOTS_ALLOCATIONS].[step]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(5)\r\n\r\n含义: 收发货 分配明细号",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "LotsAllocations"
+        "description": "Relational:TableName: [LOTS_ALLOCATIONS]\r\n<para></para>\r\n含义: LOTS_ALLOCATIONS--批次合同与收发货分配号的关联"
       },
       "LotsAddOrEditModel": {
         "type": "object",
@@ -7490,6 +12276,11 @@
           "fxCode": {
             "type": "string",
             "description": "行情来源",
+            "nullable": true
+          },
+          "quotationCode": {
+            "type": "string",
+            "description": "作价合约",
             "nullable": true
           },
           "fixationStart": {
@@ -7921,83 +12712,100 @@
         "additionalProperties": false,
         "description": "合同完成/未完成输入"
       },
-      "Pricing": {
+      "GenerateContractInput": {
         "type": "object",
         "properties": {
-          "contract": {
+          "contractDate": {
             "type": "string",
-            "description": "合同号",
-            "nullable": true
-          },
-          "lot": {
-            "type": "number",
-            "description": "Lot号",
-            "format": "double"
-          },
-          "pricingNumber": {
-            "type": "number",
-            "description": "点价编号",
-            "format": "double"
-          },
-          "pricingDate": {
-            "type": "string",
-            "description": "点价日期",
+            "description": "合同日期",
             "format": "date-time"
           },
-          "quantity": {
-            "type": "number",
-            "description": "点价重量",
-            "format": "double",
-            "nullable": true
-          },
-          "price": {
-            "type": "number",
-            "description": "点价价格",
-            "format": "double",
-            "nullable": true
-          },
-          "currency": {
-            "type": "string",
-            "description": "点价价格",
-            "nullable": true
-          },
-          "comment": {
-            "type": "string",
-            "description": "备注",
-            "nullable": true
-          },
-          "basePrice": {
-            "type": "number",
-            "description": "基价",
-            "format": "double",
-            "nullable": true
-          },
-          "adjustment": {
-            "type": "number",
-            "description": "调期费",
-            "format": "double",
-            "nullable": true
-          },
-          "commission": {
-            "type": "number",
-            "description": "手续费",
-            "format": "double",
-            "nullable": true
-          },
-          "extFee": {
-            "type": "number",
-            "description": "延期费(Extension fee)",
-            "format": "double",
-            "nullable": true
-          },
-          "market": {
+          "marcket": {
             "type": "string",
             "description": "市场",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "点价"
+        "description": "生成合同号输入"
+      },
+      "Pricing": {
+        "type": "object",
+        "properties": {
+          "contract": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PRICING].[CONTRACT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 合同号",
+            "nullable": true
+          },
+          "lot": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[LOT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 合同批次号",
+            "format": "double"
+          },
+          "pricingNumber": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[Pricing_number]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 作价记录编号",
+            "format": "double"
+          },
+          "pricingDate": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PRICING].[Pricing_date]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 作价日期",
+            "format": "date-time"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[Quantity]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: 作价数量",
+            "format": "double",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[Price]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 价格",
+            "format": "double",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PRICING].[CURRENCY]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(5)\r\n\r\n含义: 币种",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PRICING].[Comment]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(200)\r\n\r\n含义: 备注",
+            "nullable": true
+          },
+          "basePrice": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[base_price]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 基价",
+            "format": "double",
+            "nullable": true
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[Adjustment]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 调期费",
+            "format": "double",
+            "nullable": true
+          },
+          "commission": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[Commission]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 手续费",
+            "format": "double",
+            "nullable": true
+          },
+          "extFee": {
+            "type": "number",
+            "description": "Relational:ColumnName: [PRICING].[ext_fee]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 延期费",
+            "format": "double",
+            "nullable": true
+          },
+          "market": {
+            "type": "string",
+            "description": "Relational:ColumnName: [PRICING].[market]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: [冗余]业务组合",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [PRICING]\r\n<para></para>\r\n含义: PRICING--作价记录"
       },
       "PricingIPaginatedListResult": {
         "type": "object",
@@ -8514,64 +13322,64 @@
         "properties": {
           "contract": {
             "type": "string",
-            "description": "合同号",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[CONTRACT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 合同号",
             "nullable": true
           },
           "lot": {
             "type": "integer",
-            "description": "Lot号",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[LOT]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: 合同批次号",
             "format": "int32"
           },
           "extNumber": {
             "type": "integer",
-            "description": "延期点价编号(Extension number)",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[EXT_NUMBER]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: int\r\n\r\n含义: 延期点价编号",
             "format": "int32"
           },
           "extDate": {
             "type": "string",
-            "description": "延期点价日期(Pricing date)",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[EXT_DATE]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 延期点价日期",
             "format": "date-time",
             "nullable": true
           },
           "quantity": {
             "type": "number",
-            "description": "点价重量",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[Quantity]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: float\r\n\r\n含义: 延期点价数量",
             "format": "double",
             "nullable": true
           },
           "price": {
             "type": "number",
-            "description": "点价价格",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[Price]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: 价格",
             "format": "double",
             "nullable": true
           },
           "oldFixationEnd": {
             "type": "string",
-            "description": "原最后点价日(Previous fixation end)",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[Old_Fixation_end]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 原最后点价日",
             "format": "date-time",
             "nullable": true
           },
           "newFixationEnd": {
             "type": "string",
-            "description": "新最后点价日",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[New_Fixation_end]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 新最后点价日",
             "format": "date-time",
             "nullable": true
           },
           "oldPrompt": {
             "type": "string",
-            "description": "原合约(Previous prompt)",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[old_prompt]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 原合约的LME交割日",
             "format": "date-time",
             "nullable": true
           },
           "newPrompt": {
             "type": "string",
-            "description": "新合约",
+            "description": "Relational:ColumnName: [QP_EXTENSIONS].[new_prompt]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: datetime\r\n\r\n含义: 新合约的LME交割日",
             "format": "date-time",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "延期点价"
+        "description": "Relational:TableName: [QP_EXTENSIONS]\r\n<para></para>\r\n含义: QP_EXTENSIONS--延期点价"
       },
       "QpExtensionsIPaginatedListResult": {
         "type": "object",
@@ -8603,14 +13411,17 @@
           },
           "roleCode": {
             "type": "string",
+            "description": "Relational:ColumnName: [Rat_Role].[RoleCode]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 角色名",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "Relational:ColumnName: [Rat_Role].[Description]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: 备注",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Relational:TableName: [Rat_Role]\r\n<para></para>\r\n含义: Rat_Role--角色"
       },
       "RatRoleIPaginatedListResult": {
         "type": "object",
@@ -8628,6 +13439,34 @@
           }
         },
         "additionalProperties": false
+      },
+      "VatCodes": {
+        "type": "object",
+        "properties": {
+          "vatCode": {
+            "type": "string",
+            "description": "Relational:ColumnName: [VAT_CODES].[VAT_CODE]\r\n<br>\r\nIsRequired: True, ValueGenerated: None, IsPrimaryKey: True, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(10)\r\n\r\n含义: VAT_CODE",
+            "nullable": true
+          },
+          "vatDescription": {
+            "type": "string",
+            "description": "Relational:ColumnName: [VAT_CODES].[VAT_DESCRIPTION]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(Max)\r\n\r\n含义: VAT_DESCRIPTION",
+            "nullable": true
+          },
+          "vatRate": {
+            "type": "number",
+            "description": "Relational:ColumnName: [VAT_CODES].[VAT_rate]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: money\r\n\r\n含义: VAT_rate",
+            "format": "double",
+            "nullable": true
+          },
+          "arcVat": {
+            "type": "string",
+            "description": "Relational:ColumnName: [VAT_CODES].[ARC_VAT]\r\n<br>\r\nIsRequired: False, ValueGenerated: None, IsPrimaryKey: False, IsAlternateKey: False, IsForeignKey: False, Relational_ColumnType: varchar(50)\r\n\r\n含义: ARC_VAT",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Relational:TableName: [VAT_CODES]\r\n<para></para>\r\n含义: VAT_CODES--增值税代码"
       }
     },
     "securitySchemes": {
@@ -8645,12 +13484,20 @@
       "description": "账户"
     },
     {
+      "name": "ArcVatNumbers",
+      "description": "ArcVatNumbers"
+    },
+    {
       "name": "Book",
       "description": "业务组合(book/market/portfolio) 类似策略加核算主体"
     },
     {
       "name": "Charges",
       "description": "Charges"
+    },
+    {
+      "name": "Commodities",
+      "description": "物料"
     },
     {
       "name": "Comptes",
@@ -8661,16 +13508,52 @@
       "description": "合同号"
     },
     {
+      "name": "Counterparts",
+      "description": "公司"
+    },
+    {
+      "name": "CounterpartsVat",
+      "description": "CounterpartsVat"
+    },
+    {
+      "name": "Currency",
+      "description": "币种"
+    },
+    {
+      "name": "Entities",
+      "description": "arc的实体"
+    },
+    {
       "name": "Enum",
       "description": "枚举"
     },
     {
+      "name": "InvoiceAlloctions",
+      "description": "Invoice Alloctions"
+    },
+    {
       "name": "Invoices",
-      "description": "发票"
+      "description": "销售发票"
     },
     {
       "name": "InvoicesDocs",
       "description": "InvoicesDocs"
+    },
+    {
+      "name": "Lots",
+      "description": "ContractLots"
+    },
+    {
+      "name": "MaterialAllocationsDetails",
+      "description": "MaterialAllocationsDetails"
+    },
+    {
+      "name": "Metals",
+      "description": "金属品类"
+    },
+    {
+      "name": "PaymentTerms",
+      "description": "PaymentTerms"
     },
     {
       "name": "PhysicalContracts",
@@ -8682,7 +13565,7 @@
     },
     {
       "name": "PurchInvoices",
-      "description": "PurchInvoices"
+      "description": "采购发票"
     },
     {
       "name": "QpExtensions",
@@ -8691,6 +13574,10 @@
     {
       "name": "Role",
       "description": "角色"
+    },
+    {
+      "name": "VatCodes",
+      "description": "VatCodes"
     },
     {
       "name": "WeatherForecast",
